@@ -1,3 +1,5 @@
+using _3ASP.Models;
+
 namespace _3ASP.Data;
 
 public class DataContext : DbContext
@@ -5,6 +7,6 @@ public class DataContext : DbContext
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
     }
-
-    // public DbSet<User> Users => Set<User>();
+    
+    public DbSet<User> Users => Set<User>();
 }
