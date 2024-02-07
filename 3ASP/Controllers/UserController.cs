@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _3ASP.Data;
 using _3ASP.DTO.UserDto;
 using _3ASP.Models;
+using _3ASP.Services.UserServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Protocol;
@@ -18,50 +19,31 @@ namespace _3ASP.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly DataContext _context;
+        private readonly IUserService _userService;
 
-        private static List<User> _users = new List<User>
-        {
-            new User()
-            {
-                Id = 1, Pseudo = "Toto", Email = "toto@g.c", Password = BCrypt.Net.BCrypt.HashPassword("azerty")
-            },
-            new User()
-            {
-                Id = 2, Pseudo = "Tata", Email = "tata@g.c", Password = BCrypt.Net.BCrypt.HashPassword("tatatoto")
-            }
-        };
-
-        public UserController(ILogger<UserController> loger, DataContext context)
+        public UserController(ILogger<UserController> loger, DataContext context, IUserService userService)
         {
             _logger = loger;
             _context = context;
+            _userService = userService;
         }
 
         [HttpGet]
-        public ActionResult<List<User>> Get()
+        public ActionResult<List<User>> GetAllUsers()
         {
-            return Ok(_users);
+            return Ok(_userService.GetAllUsers());
         }
 
         [HttpGet( "{id}")]
-        public ActionResult<User> Get(int id)
+        public ActionResult<User> GetUserById(int id)
         {
-            return Ok(_users.Find((u) => u.Id == id));
+            return Ok(_userService.GetUserById(id));
         }
 
         [HttpPost]
-        public ActionResult<List<User>> Post(PostUserDto user)
+        public ActionResult<List<User>> AddUser(PostUserDto user)
         {
-            var newUser = new User()
-            {
-                Id = _users.Max(u => u.Id) + 1,
-                Pseudo = user.Pseudo,
-                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                Email = user.Email
-            };
-            
-            _users.Add(newUser);
-            return Ok(_users);
+            return Ok(_userService.AddUser(user));
         }
     }
 }
