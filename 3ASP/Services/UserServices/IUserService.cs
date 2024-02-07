@@ -5,9 +5,9 @@ namespace _3ASP.Services.UserServices;
 
 public interface IUserService
 {
-    List<User> GetAllUsers();
+    Task<ServiceResponse<List<User>>> GetAllUsers();
 
-    User GetUserById(int id);
+    Task<ServiceResponse<User>> GetUserById(int id);
 
-    List<User> AddUser(PostUserDto user);
+    Task<ServiceResponse<List<User>>> AddUser(PostUserDto user);
 }

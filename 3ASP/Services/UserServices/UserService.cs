@@ -17,24 +17,24 @@ public class UserService : IUserService
         }
     };
 
-    public List<User> GetAllUsers()
+    public async Task<ServiceResponse<List<User>>> GetAllUsers()
     {
-        return _users;
+        var serviceResponse = new ServiceResponse<List<User>>();
+        serviceResponse.Data = _users;
+        return serviceResponse;
     }
 
-    public User GetUserById(int id)
+    public async Task<ServiceResponse<User>> GetUserById(int id)
     {
         var user = _users.Find(u => u.Id == id);
-        if (user != null)
-        {
-            return user;
-        }
-
+        var serviceResponse = new ServiceResponse<User>();
+        serviceResponse.Data = user;
         throw new Exception("User not found");
     }
 
-    public List<User> AddUser(PostUserDto user)
+    public async Task<ServiceResponse<List<User>>> AddUser(PostUserDto user)
     {
+        var serviceResponse = new ServiceResponse<List<User>>();
         var newUser = new User()
         {
             Id = _users.Max(u => u.Id) + 1,
@@ -44,7 +44,8 @@ public class UserService : IUserService
         };
             
         _users.Add(newUser);
+        serviceResponse.Data = _users;
 
-        return _users;
+        return serviceResponse;
     }
 }

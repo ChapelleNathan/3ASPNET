@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using _3ASP.Data;
 using _3ASP.DTO.UserDto;
-using _3ASP.Models;
 using _3ASP.Services.UserServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,21 +28,21 @@ namespace _3ASP.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<User>> GetAllUsers()
+        public async Task<ActionResult<ServiceResponse<List<User>>>> Get()
         {
-            return Ok(_userService.GetAllUsers());
+            return Ok(await _userService.GetAllUsers());
         }
 
         [HttpGet( "{id}")]
-        public ActionResult<User> GetUserById(int id)
+        public async Task<ActionResult<ServiceResponse<User>>> GetOne(int id)
         {
-            return Ok(_userService.GetUserById(id));
+            return Ok(await _userService.GetUserById(id));
         }
 
         [HttpPost]
-        public ActionResult<List<User>> AddUser(PostUserDto user)
+        public async Task<ActionResult<ServiceResponse<List<User>>>> AddUser(PostUserDto user)
         {
-            return Ok(_userService.AddUser(user));
+            return Ok(await _userService.AddUser(user));
         }
     }
 }
