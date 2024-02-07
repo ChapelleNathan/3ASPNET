@@ -28,19 +28,19 @@ namespace _3ASP.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> Get()
+        public async Task<ActionResult<ServiceResponse<List<UserDto>>>> Get()
         {
             return Ok(await _userService.GetAllUsers());
         }
 
         [HttpGet( "{id}")]
-        public async Task<ActionResult<ServiceResponse<User>>> GetOne(int id)
+        public async Task<ActionResult<ServiceResponse<UserDto>>> GetOne(int id)
         {
             return Ok(await _userService.GetUserById(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> AddUser(PostUserDto user)
+        public async Task<ActionResult<ServiceResponse<List<UserDto>>>> AddUser(PostUserDto user)
         {
             return Ok(await _userService.AddUser(user));
         }
