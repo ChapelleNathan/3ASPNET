@@ -52,4 +52,29 @@ public class UserService : IUserService
 
         return serviceResponse;
     }
+
+    public async Task<ServiceResponse<UserDto>> UpdateUser(UpdateUserDto updatedUser)
+    {
+        var serviceResponse = new ServiceResponse<UserDto>();
+        try
+        {
+            var user = _users.Find(c => c.Id == updatedUser.Id);
+            if (user is null)
+            {
+                throw new Exception("User not found");
+            }
+            user.Email = updatedUser.Email;
+            user.Pseudo = updatedUser.Pseudo;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
+            
+            serviceResponse.Data = _mapper.Map<UserDto>(user);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
+    }
 }

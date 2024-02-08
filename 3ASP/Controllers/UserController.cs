@@ -44,5 +44,16 @@ namespace _3ASP.Controllers
         {
             return Ok(await _userService.AddUser(user));
         }
+
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<UserDto>>> UpdateUser(UpdateUserDto updatedUser)
+        {
+            var response = await _userService.UpdateUser(updatedUser);
+            if (response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }
