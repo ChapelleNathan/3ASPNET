@@ -6,7 +6,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace _3ASP.Migrations
 {
     /// <inheritdoc />
-    public partial class UserMigration : Migration
+    public partial class UsersMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

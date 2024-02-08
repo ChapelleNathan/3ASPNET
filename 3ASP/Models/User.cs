@@ -1,16 +1,27 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using _3ASP.Enums;
 
 namespace _3ASP.Models;
 
 public class User
 {
-    public int Id { get; private set; }
+    [Key]
+    public int Id { get;  set; }
 
-    public string Email { get; private set; }
+    [Column("Email")]
+    [Required]
+    public string Email { get;  set; }
 
-    public string Pseudo { get; private set; }
+    [Column("Pseudo")]
+    [Required]
+    public string Pseudo { get;  set; }
 
-    public string Password { get; private set; }
+    [Column("Password")]
+    [Required]
+    public string Password { get;  set; }
 
+    [Column("Role")]
     public Roles Role { get; private set; } = Roles.User;
+    
 }
