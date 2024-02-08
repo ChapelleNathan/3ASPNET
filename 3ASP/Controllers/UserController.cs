@@ -34,25 +34,26 @@ namespace _3ASP.Controllers
         }
 
         [HttpGet( "{id}")]
-        public async Task<ActionResult<ServiceResponse<UserDto>>> GetOne(int id)
+        public async Task<ActionResult<ServiceResponse<UserDto>>> GetUserById(int id)
         {
-            return Ok(await _userService.GetUserById(id));
+            var response = await _userService.GetUserById(id);
+            if (response.Data is null) return NotFound(response);
+            return Ok(response);
         }
 
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<UserDto>>>> AddUser(PostUserDto user)
         {
-            return Ok(await _userService.AddUser(user));
+            var response = await _userService.AddUser(user);
+            if (response.Data is null) return NotFound(response);
+            return Ok(response);
         }
 
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<UserDto>>> UpdateUser(UpdateUserDto updatedUser)
         {
             var response = await _userService.UpdateUser(updatedUser);
-            if (response.Data is null)
-            {
-                return NotFound(response);
-            }
+            if (response.Data is null) return NotFound(response);
             return Ok(response);
         }
 
@@ -60,11 +61,7 @@ namespace _3ASP.Controllers
         public async Task<ActionResult<ServiceResponse<UserDto>>> DeleteUser(int id)
         {
             var response = await _userService.DeleteUser(id);
-            if (response.Data is null)
-            {
-                return NotFound(response);
-            }
-
+            if (response.Data is null) return NotFound(response);
             return Ok(response);
         }
     }

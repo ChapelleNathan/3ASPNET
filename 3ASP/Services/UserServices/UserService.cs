@@ -34,22 +34,32 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse<UserDto>> GetUserById(int id)
     {
-        var user = _users.Find(u => u.Id == id);
-        if (user == null) throw new Exception("User not found");
         var serviceResponse = new ServiceResponse<UserDto>();
-        serviceResponse.Data = _mapper.Map<UserDto>(user);
+        try
+        {
+            var user = _users.Find(u => u.Id == id);
+            if (user is null) throw new Exception("User not found");
+            serviceResponse.Data = _mapper.Map<UserDto>(user);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+        
         return serviceResponse;
     }
 
     public async Task<ServiceResponse<List<UserDto>>> AddUser(PostUserDto userDto)
     {
-        var newUser = _mapper.Map<User>(userDto) ?? throw new Exception();
+        var serviceResponse = new ServiceResponse<List<UserDto>>();
+        var newUser = _mapper.Map<User>(userDto)!;
         newUser.Id = _users.Max(u => u.Id) + 1;
         newUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-        var serviceResponse = new ServiceResponse<List<UserDto>>();
+        
         _users.Add(newUser);
+        
         serviceResponse.Data = _users.Select(u => _mapper.Map<UserDto>(u)).ToList()!;
-
         return serviceResponse;
     }
 
