@@ -1,3 +1,4 @@
+using _3ASP;
 using _3ASP.Data;
 using _3ASP.Services.UserServices;
 
@@ -30,3 +31,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//Ne marche pas car l'api tourne et donc cela ne reach jamais le moment ou est lancé la console app
+//Il faut certainement faire une autre app C#
+//new ConsoleApp(new ConsoleMessages()).LaunchApp();
