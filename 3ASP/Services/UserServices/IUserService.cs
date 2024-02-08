@@ -9,7 +9,7 @@ public interface IUserService
 
     Task<ServiceResponse<UserDto>> GetUserById(int id);
 
-    Task<ServiceResponse<List<UserDto>>> AddUser(PostUserDto user);
+    Task<ServiceResponse<UserDto>> AddUser(PostUserDto user);
 
     Task<ServiceResponse<UserDto>> UpdateUser(UpdateUserDto updatedUser);
 

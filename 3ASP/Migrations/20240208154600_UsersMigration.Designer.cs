@@ -10,8 +10,8 @@ using _3ASP.Data;
 namespace _3ASP.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240205154127_UserMigration")]
-    partial class UserMigration
+    [Migration("20240208154600_UsersMigration")]
+    partial class UsersMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,18 +29,22 @@ namespace _3ASP.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Password");
 
                     b.Property<string>("Pseudo")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Pseudo");
 
                     b.Property<int>("Role")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("Role");
 
                     b.HasKey("Id");
 
