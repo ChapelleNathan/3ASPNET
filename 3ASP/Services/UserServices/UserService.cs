@@ -28,7 +28,7 @@ public class UserService : IUserService
     public async Task<ServiceResponse<List<UserDto>>> GetAllUsers()
     {
         var serviceResponse = new ServiceResponse<List<UserDto>>();
-        serviceResponse.Data = _users.Select(c => _mapper.Map<UserDto>(c)).ToList()!;
+        serviceResponse.Data = _users.Select(u => _mapper.Map<UserDto>(u)).ToList()!;
         return serviceResponse;
     }
 
@@ -44,11 +44,11 @@ public class UserService : IUserService
     public async Task<ServiceResponse<List<UserDto>>> AddUser(PostUserDto userDto)
     {
         var newUser = _mapper.Map<User>(userDto) ?? throw new Exception();
-        newUser.Id = _users.Max(c => c.Id) + 1;
+        newUser.Id = _users.Max(u => u.Id) + 1;
         newUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
         var serviceResponse = new ServiceResponse<List<UserDto>>();
         _users.Add(newUser);
-        serviceResponse.Data = _users.Select(c => _mapper.Map<UserDto>(c)).ToList()!;
+        serviceResponse.Data = _users.Select(u => _mapper.Map<UserDto>(u)).ToList()!;
 
         return serviceResponse;
     }
@@ -58,7 +58,7 @@ public class UserService : IUserService
         var serviceResponse = new ServiceResponse<UserDto>();
         try
         {
-            var user = _users.Find(c => c.Id == updatedUser.Id);
+            var user = _users.Find(u => u.Id == updatedUser.Id);
             if (user is null)
             {
                 throw new Exception("User not found");
@@ -68,6 +68,28 @@ public class UserService : IUserService
             user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
             
             serviceResponse.Data = _mapper.Map<UserDto>(user);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
+    }
+
+    public async Task<ServiceResponse<UserDto>> DeleteUser(int id)
+    {
+        var serviceResponse = new ServiceResponse<UserDto>();
+        try
+        {
+            var user = _users.Find(u => u.Id == id);
+            if (user is null)
+            {
+                throw new Exception("User not found");
+            }
+            serviceResponse.Data = _mapper.Map<UserDto>(user);
+            _users.Remove(user);
         }
         catch (Exception e)
         {

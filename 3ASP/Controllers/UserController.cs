@@ -55,5 +55,17 @@ namespace _3ASP.Controllers
             }
             return Ok(response);
         }
+
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<UserDto>>> DeleteUser(int id)
+        {
+            var response = await _userService.DeleteUser(id);
+            if (response.Data is null)
+            {
+                return NotFound(response);
+            }
+
+            return Ok(response);
+        }
     }
 }

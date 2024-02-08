@@ -12,4 +12,6 @@ public interface IUserService
     Task<ServiceResponse<List<UserDto>>> AddUser(PostUserDto user);
 
     Task<ServiceResponse<UserDto>> UpdateUser(UpdateUserDto updatedUser);
+
+    Task<ServiceResponse<UserDto>> DeleteUser(int id);
 }
