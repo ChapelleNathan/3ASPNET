@@ -21,23 +21,40 @@ void LaunchApp()
             break;
         case "q":
             return;
+        default:
+            Console.WriteLine("Commande non trouvée");
+            break;
     }
 
     LaunchApp();
 }
 
-void UserCase()
+async void UserCase()
 {
     consoleMessages.UserMessage();
-    var userHandler = new UserHandler();
     var request = Console.ReadLine();
-    if (request is null)
+    switch (request)
     {
-        Console.WriteLine("Je n'ai pas compris, que voulez vous faire ?");
-        UserCase();
-    }
-    else
-    {
-        userHandler.handler(request);
+        case "GetAll":
+            await UserHandler.GetUsers();
+            break;
+        case "GetOne":
+            throw new NotImplementedException();
+            break;
+        case "AddOne":
+            throw new NotImplementedException();
+            break;
+        case "UpdateOne":
+            throw new NotImplementedException();
+            break;
+        case "DeleteOne":
+            throw new NotImplementedException();
+            break;
+        case "return":
+            break;
+        default:
+            Console.WriteLine("Commande non trouvée");
+            UserCase();
+            break;
     }
 }

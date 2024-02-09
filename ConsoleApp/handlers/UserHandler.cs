@@ -1,26 +1,19 @@
+using System.Text.Json.Nodes;
+
 namespace _3ASP.route;
 
-public class UserHandler
+public static class UserHandler
 {
-    public  void handler(string request)
-    {
-        switch (request)
-        {
-            case "getAll":
-                GetUsers();
-                break;
-        }
-    }
-    private  async Task GetUsers()
+    public static  async Task GetUsers()
     {
         using (HttpClient client = new HttpClient())
         {
             string url = "http://localhost:5243/api/User";
 
-            HttpResponseMessage response = await client.GetAsync(url);
+            HttpResponseMessage @response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
-                string responseBody = await response.Content.ReadAsStringAsync();
+                dynamic responseBody = JsonNode.Parse(await response.Content.ReadAsStringAsync()) ?? throw new InvalidOperationException();
                 Console.WriteLine(responseBody);
             }
             else
