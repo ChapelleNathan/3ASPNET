@@ -43,11 +43,11 @@ async void UserCase()
                 Console.WriteLine("Veuillez enseignez un ID");
                 userId = Console.ReadLine();
             }
-
             await UserHandler.GetOneUser(userId);
             break;
         case "AddOne":
-            throw new NotImplementedException();
+            await UserHandler.AddOneUser();
+            break;
         case "UpdateOne":
             throw new NotImplementedException();
         case "DeleteOne":
