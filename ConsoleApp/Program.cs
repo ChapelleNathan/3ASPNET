@@ -1,12 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using _3ASP;
-using _3ASP.route;
-
-var consoleMessages = new ConsoleMessages();
+using ConsoleApp.Handlers;
 
 LaunchApp();
-
 
 void LaunchApp()
 {
@@ -31,7 +28,7 @@ void LaunchApp()
 
 async void UserCase()
 {
-    consoleMessages.UserMessage();
+    ConsoleMessages.UserMessage();
     var request = Console.ReadLine();
     switch (request)
     {
@@ -39,17 +36,22 @@ async void UserCase()
             await UserHandler.GetUsers();
             break;
         case "GetOne":
-            throw new NotImplementedException();
+            Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez rechercher");
+            string? userId = Console.ReadLine();
+            while (userId is null)
+            {
+                Console.WriteLine("Veuillez enseignez un ID");
+                userId = Console.ReadLine();
+            }
+
+            await UserHandler.GetOneUser(userId);
             break;
         case "AddOne":
             throw new NotImplementedException();
-            break;
         case "UpdateOne":
             throw new NotImplementedException();
-            break;
         case "DeleteOne":
             throw new NotImplementedException();
-            break;
         case "return":
             break;
         default:
