@@ -1,52 +1,52 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using _3ASP;
+using _3ASP.DTO.UserDto;
 using ConsoleApp.Handlers;
+using Newtonsoft.Json.Linq;
 
-LaunchApp();
-
-void LaunchApp()
+var app = true;
+while (app == true)
 {
-    Console.WriteLine("Que voulez vous faire ?");
-    Console.WriteLine("User: Accéder à toutes les commandes lié aux utilisateurs");
-    Console.WriteLine("q: pour quitter la ligne de commande");
+    ConsoleMessages.Startup();
     var choice = Console.ReadLine();
     switch (choice)
     {
         case "User":
-            UserCase();
+            var response = await UserCase();
+            if (response != null)
+                Console.WriteLine(response);
+            ConsoleMessages.EndOfOperation();
             break;
         case "q":
-            return;
+            app = false;
+            Console.WriteLine("Au revoir !");
+            break;
         default:
             Console.WriteLine("Commande non trouvée");
             break;
     }
-
-    LaunchApp();
 }
+    
 
-async void UserCase()
+
+async Task<dynamic> UserCase()
 {
     ConsoleMessages.UserMessage();
     var request = Console.ReadLine();
+    dynamic? response = null;
     switch (request)
     {
         case "GetAll":
-            await UserHandler.GetUsers();
+            response = await UserHandler.GetUsers();
             break;
         case "GetOne":
             Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez rechercher");
-            string? userId = Console.ReadLine();
-            while (userId is null)
-            {
-                Console.WriteLine("Veuillez enseignez un ID");
-                userId = Console.ReadLine();
-            }
-            await UserHandler.GetOneUser(userId);
+            string userId = Console.ReadLine()!;
+            response = JObject.FromObject(await UserHandler.GetOneUser(userId));
             break;
         case "AddOne":
-            await UserHandler.AddOneUser();
+            response = JObject.FromObject(await UserHandler.AddOneUser());
             break;
         case "UpdateOne":
             throw new NotImplementedException();
@@ -56,7 +56,9 @@ async void UserCase()
             break;
         default:
             Console.WriteLine("Commande non trouvée");
-            UserCase();
+            await UserCase();
             break;
     }
+
+    return response;
 }
