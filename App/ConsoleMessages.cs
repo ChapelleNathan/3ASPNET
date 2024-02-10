@@ -24,6 +24,7 @@ public static class ConsoleMessages
         Console.WriteLine("UpdateOne: Modifie un utilisateur");
         Console.WriteLine("AddOne: Créer un nouvel utilisateur");
         Console.WriteLine("DeleteOne: Supprime un utilisateur selon un ID");
+        Console.WriteLine("return: Retourner en arrière");
     }
 
     public static void DisplayError(HttpStatusCode errorCode, dynamic message)

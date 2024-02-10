@@ -28,7 +28,6 @@ while (app == true)
             break;
     }
 }
-    
 
 
 async Task<dynamic?> UserCase()
@@ -43,17 +42,27 @@ async Task<dynamic?> UserCase()
             break;
         case "GetOne":
             Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez rechercher");
-            response = JObject.FromObject(await UserHandler.GetOneUser(Console.ReadLine()!));
+            response = await UserHandler.GetOneUser(Console.ReadLine()!);
+            if (response is not null)
+                response = JObject.FromObject(response);
             break;
         case "AddOne":
-            response = JObject.FromObject(await UserHandler.AddOneUser());
+            response = await UserHandler.AddOneUser();
+            if (response is not null)
+                response = JObject.FromObject(response);
             break;
         case "UpdateOne":
             Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez modifier");
-            response = JObject.FromObject(await UserHandler.UpdateOneUser(Console.ReadLine()!));
+            response = await UserHandler.UpdateOneUser(Console.ReadLine()!);
+            if (response is not null)
+                response = JObject.FromObject(response);
             break;
         case "DeleteOne":
-            throw new NotImplementedException();
+            Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez supprimer");
+            response = await UserHandler.DeleteUser(Console.ReadLine()!);
+            if (response is not null)
+                response = JObject.FromObject(response);
+            break;
         case "return":
             break;
         default:
