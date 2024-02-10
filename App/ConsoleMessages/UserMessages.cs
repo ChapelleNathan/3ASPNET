@@ -1,21 +1,10 @@
 using System.Net;
-using _3ASP.DTO.UserDto;
+using App.DTO.UserDto;
 
-namespace _3ASP;
+namespace App.ConsoleMessages;
 
-public static class ConsoleMessages
+public abstract class UserMessages : GenericMessages
 {
-    public static void EndOfOperation()
-    {
-        Console.WriteLine("Appuyer sur n'importe quel touche pour continuer");
-        Console.ReadLine();
-    }
-    public static void Startup()
-    {
-        Console.WriteLine("Que voulez vous faire ?");
-        Console.WriteLine("User: Accéder à toutes les commandes lié aux utilisateurs");
-        Console.WriteLine("q: pour quitter la ligne de commande");
-    }
     public static void UserMessage()
     {
         Console.WriteLine("Que voulez vous faire ?");
@@ -94,29 +83,5 @@ public static class ConsoleMessages
         }
         
         return user;
-    }
-
-    private static string EntryTest()
-    {
-        string entry = Console.ReadLine()!;
-        while (entry is "" or null)
-        {
-            Console.WriteLine("Entrée incorrect, veuillez recommancer");
-            entry = Console.ReadLine()!;
-        }
-        return entry;
-    } 
-
-    private static string YesNo(string operation)
-    {
-        Console.WriteLine("Changement de : " + operation);
-        Console.WriteLine("o: oui (default)");
-        Console.WriteLine("n: non");
-        var response = Console.ReadLine();
-        if (response is "" or null )
-        {
-            response = "o";
-        }
-        return response;
     }
 }

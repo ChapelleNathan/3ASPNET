@@ -1,19 +1,21 @@
-using ConsoleApp.Handlers;
+using App.ConsoleMessages;
+using App.Handlers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace _3ASP.Choices;
+namespace App.Choices;
 
-public class UserChoice
+public static class UserChoice
 {
     public static async Task<dynamic?> UserCase()
     {
-        ConsoleMessages.UserMessage();
+        UserMessages.UserMessage();
         var request = Console.ReadLine();
         dynamic? response = null;
         switch (request)
         {
             case "GetAll":
-                response = await UserHandler.GetUsers();
+                response = JsonConvert.SerializeObject(await UserHandler.GetUsers());
                 break;
             case "GetOne":
                 Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez rechercher");

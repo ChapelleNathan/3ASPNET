@@ -1,6 +1,6 @@
-using _3ASP.Enums;
+using App.Enums;
 
-namespace _3ASP.DTO.UserDto;
+namespace App.DTO.UserDto;
 
 public class UserDto
 {

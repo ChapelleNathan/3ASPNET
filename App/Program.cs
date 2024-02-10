@@ -1,16 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Text.Json;
-using _3ASP;
-using _3ASP.Choices;
-using _3ASP.DTO.UserDto;
-using ConsoleApp.Handlers;
+using App;
+using App.Choices;
+using App.ConsoleMessages;
 using Newtonsoft.Json.Linq;
 
 var app = true;
 while (app == true)
 {
-    ConsoleMessages.Startup();
+    GenericMessages.Startup();
     var choice = Console.ReadLine();
     switch (choice)
     {
@@ -18,7 +17,7 @@ while (app == true)
             var response = await UserChoice.UserCase();
             if (response != null)
                 Console.WriteLine(response);
-            ConsoleMessages.EndOfOperation();
+            GenericMessages.EndOfOperation();
             break;
         case "q":
             app = false;

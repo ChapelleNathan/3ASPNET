@@ -1,4 +1,4 @@
-namespace _3ASP.Enums;
+namespace App.Enums;
 
 public enum Roles
 {

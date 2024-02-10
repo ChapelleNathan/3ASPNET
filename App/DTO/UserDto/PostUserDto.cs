@@ -1,4 +1,4 @@
-namespace _3ASP.DTO.UserDto;
+namespace App.DTO.UserDto;
 
 public class PostUserDto
 {
