@@ -66,7 +66,6 @@ public class UserService : IUserService
 
             user.Email = updatedUser.Email;
             user.Pseudo = updatedUser.Pseudo;
-            user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             serviceResponse.Data = _mapper.Map<UserDto>(user);
