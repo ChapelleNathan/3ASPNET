@@ -69,10 +69,42 @@ public static class ConsoleMessages
         return newUser;
     }
 
-    public static void UpdateUserConsole(dynamic updatedUser)
+    public static UpdateUserDto UpdateUserConsole(UserDto updatedUser)
     {
-        //TODO
+        UpdateUserDto user = new UpdateUserDto()
+        {
+            Id = updatedUser.Id,
+            Pseudo = updatedUser.Pseudo,
+            Email = updatedUser.Email,
+        };
+        
+        string response = YesNo("pseudo");
+        if (response == "o")
+        {
+            Console.WriteLine("Nouveau pseudo ?");
+            user.Pseudo = EntryTest();
+        }
+
+        response = YesNo("email");
+        if (response is "o")
+        {
+            Console.WriteLine("Nouvelle email ?");
+            user.Email = EntryTest();
+        }
+        
+        return user;
     }
+
+    private static string EntryTest()
+    {
+        string entry = Console.ReadLine()!;
+        while (entry is "" or null)
+        {
+            Console.WriteLine("Entrée incorrect, veuillez recommancer");
+            entry = Console.ReadLine()!;
+        }
+        return entry;
+    } 
 
     private static string YesNo(string operation)
     {
@@ -80,7 +112,7 @@ public static class ConsoleMessages
         Console.WriteLine("o: oui (default)");
         Console.WriteLine("n: non");
         var response = Console.ReadLine();
-        if (response == "")
+        if (response is "" or null )
         {
             response = "o";
         }

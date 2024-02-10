@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using _3ASP;
 using _3ASP.DTO.UserDto;
+using _3ASP.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace ConsoleApp.Handlers;
@@ -9,6 +10,7 @@ namespace ConsoleApp.Handlers;
 public static class UserHandler
 {
     private const string url = "http://localhost:5243/api/User";
+
     public static async Task<List<UserDto>?> GetUsers()
     {
         using (HttpClient client = new HttpClient())
@@ -52,7 +54,7 @@ public static class UserHandler
                 return null;
             }
 
-            
+
             return new UserDto()
             {
                 Id = responseBody.data.id,
@@ -76,7 +78,7 @@ public static class UserHandler
                 ConsoleMessages.DisplayError(response.StatusCode, responseBody.message);
                 return null;
             }
-
+            
             return new UserDto()
             {
                 Id = responseBody.data.id,
@@ -88,22 +90,29 @@ public static class UserHandler
         }
     }
 
-    public static async Task<UpdateUserDto?> UpdateOneUser(string id)
+    public static async Task<UserDto?> UpdateOneUser(string id)
     {
+        UserDto? user = await GetOneUser(id);
+        if (user is null) return null;
+        UpdateUserDto updatedUser = ConsoleMessages.UpdateUserConsole(user);
         using (HttpClient client = new HttpClient())
         {
-            HttpResponseMessage response = await client.GetAsync(url + "/" + id);
+            HttpResponseMessage response = await client.PutAsJsonAsync(url, updatedUser);
             dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
-            ConsoleMessages.UpdateUserConsole(responseBody.data);
-            if (responseBody.success == "false")
+            if (responseBody.success is null)
             {
                 ConsoleMessages.DisplayError(response.StatusCode, responseBody.message);
                 return null;
             }
 
-            Console.WriteLine(responseBody.data);
-            //TODO faire la modification avec l'utilisateur que l'on a reçu
-            return null;
+            return new UserDto()
+            {
+                Id = responseBody.data.id,
+                Password = responseBody.data.password,
+                Pseudo = responseBody.data.pseudo,
+                Email = responseBody.data.email,
+                Role = responseBody.data.role,
+            };
         }
     }
 }

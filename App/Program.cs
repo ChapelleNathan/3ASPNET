@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Text.Json;
 using _3ASP;
 using _3ASP.DTO.UserDto;
 using ConsoleApp.Handlers;
@@ -30,7 +31,7 @@ while (app == true)
     
 
 
-async Task<dynamic> UserCase()
+async Task<dynamic?> UserCase()
 {
     ConsoleMessages.UserMessage();
     var request = Console.ReadLine();
@@ -42,14 +43,15 @@ async Task<dynamic> UserCase()
             break;
         case "GetOne":
             Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez rechercher");
-            string userId = Console.ReadLine()!;
-            response = JObject.FromObject(await UserHandler.GetOneUser(userId));
+            response = JObject.FromObject(await UserHandler.GetOneUser(Console.ReadLine()!));
             break;
         case "AddOne":
             response = JObject.FromObject(await UserHandler.AddOneUser());
             break;
         case "UpdateOne":
-            throw new NotImplementedException();
+            Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez modifier");
+            response = JObject.FromObject(await UserHandler.UpdateOneUser(Console.ReadLine()!));
+            break;
         case "DeleteOne":
             throw new NotImplementedException();
         case "return":
