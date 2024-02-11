@@ -41,18 +41,7 @@ public class UserService : IUserService
 
         return serviceResponse;
     }
-
-    public async Task<ServiceResponse<UserDto>> AddUser(PostUserDto userDto)
-    {
-        var serviceResponse = new ServiceResponse<UserDto>();
-        var newUser = _mapper.Map<User>(userDto)!;
-        newUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-        await _context.Users.AddAsync(newUser);
-        await _context.SaveChangesAsync();
-        serviceResponse.Data = _mapper.Map<UserDto>(newUser);
-        return serviceResponse;
-    }
-
+    
     public async Task<ServiceResponse<UserDto>> UpdateUser(UpdateUserDto updatedUser)
     {
         var serviceResponse = new ServiceResponse<UserDto>();
