@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using _3ASP.Data;
 using _3ASP.DTO.UserDto;
+using _3ASP.Enums;
 using _3ASP.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using NuGet.Protocol;
 using Org.BouncyCastle.Crypto.Generators;
 
@@ -27,7 +30,7 @@ namespace _3ASP.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin,User")] //Pourquoi je ne peux pas utiliser mon Enum Roles (Roles = Roles.Admin.ToString()) ?
         public async Task<ActionResult<ServiceResponse<List<UserDto>>>> Get()
         {
             return Ok(await _userService.GetAllUsers());

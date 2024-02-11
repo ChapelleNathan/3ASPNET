@@ -35,5 +35,13 @@ namespace _3ASP.Controllers
             if (response.Data is null) return BadRequest(response);
             return Ok(response);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<string?>>> Bearer(AuthUserDto user)
+        {
+            var response = await _authService.Bearer(user);
+            if (response.Data is null) return BadRequest(response);
+            return Ok(response);
+        }
     }
 }
