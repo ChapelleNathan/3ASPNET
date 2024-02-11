@@ -23,7 +23,15 @@ namespace _3ASP.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<UserDto>>> Register(PostUserDto user)
         {
-            return Ok(await _authService.Register(user));
+            var response = await _authService.Register(user);
+            if (response.Data is null) return BadRequest(response);
+            return Ok(response);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ServiceResponse<UserDto>>> Login(AuthUserDto user)
+        {
+            return Ok(await _authService.LogIn(user));
         }
     }
 }

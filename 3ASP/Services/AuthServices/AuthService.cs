@@ -18,10 +18,18 @@ public class AuthService : IAuthService
         var serviceResponse = new ServiceResponse<UserDto>();
         var newUser = _mapper.Map<User>(user)!;
         newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
-        await _context.Users.AddAsync(newUser);
-        await _context.SaveChangesAsync();
-
-        serviceResponse.Data = _mapper.Map<UserDto>(newUser);
+        try
+        {
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = _mapper.Map<UserDto>(newUser);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = "Pseudo already taken";
+        }
+        
         return serviceResponse;
     }
 
