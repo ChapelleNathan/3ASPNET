@@ -14,12 +14,12 @@ namespace _3ASP.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthService _authService;
-        
+
         public AuthenticationController(IAuthService authService)
         {
             _authService = authService;
         }
-        
+
         [HttpPost("register")]
         public async Task<ActionResult<ServiceResponse<UserDto>>> Register(PostUserDto user)
         {
@@ -31,7 +31,9 @@ namespace _3ASP.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ServiceResponse<UserDto>>> Login(AuthUserDto user)
         {
-            return Ok(await _authService.LogIn(user));
+            var response = await _authService.LogIn(user);
+            if (response.Data is null) return BadRequest(response);
+            return Ok(response);
         }
     }
 }

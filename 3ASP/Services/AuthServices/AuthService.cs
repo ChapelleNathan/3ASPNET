@@ -13,6 +13,7 @@ public class AuthService : IAuthService
         _mapper = mapper;
         _context = context;
     }
+
     public async Task<ServiceResponse<UserDto>> Register(PostUserDto user)
     {
         var serviceResponse = new ServiceResponse<UserDto>();
@@ -29,12 +30,38 @@ public class AuthService : IAuthService
             serviceResponse.Success = false;
             serviceResponse.Message = "Pseudo already taken";
         }
-        
+
         return serviceResponse;
     }
 
-    public Task<ServiceResponse<UserDto>> LogIn(AuthUserDto user)
+    public async Task<ServiceResponse<UserDto>> LogIn(AuthUserDto request)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<UserDto>(); 
+        try
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(u => u.Pseudo == request.Pseudo);
+            if (user is null) throw new Exception("User not found");
+            try
+            {
+                if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+                {
+                    throw new Exception("Wrong password or username");
+                }
+
+                serviceResponse.Data = _mapper.Map<UserDto>(user);
+            }
+            catch (Exception e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = e.Message;
+            }
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+        
+        return serviceResponse;
     }
 }
