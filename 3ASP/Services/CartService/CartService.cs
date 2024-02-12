@@ -88,6 +88,31 @@ public class CartService : ICartService
         return serviceResponse;
     }
 
+    public async Task<ServiceResponse<List<ProductDto>>> GetCart(int userId)
+    {
+        var serviceResponse = new ServiceResponse<List<ProductDto>>();
+        var products = new List<Product>();
+        try
+        {
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId);
+            if (cart is null) throw new Exception("No cart for this user");
+            var cartProducts = _context.CartProducts.Where(c => c.Cart.Id == cart.Id)
+                .Include(cartProduct => cartProduct.Product).ToList();
+            foreach (var cartProduct in cartProducts)
+            {
+                products.Add(cartProduct.Product);
+            }
+            serviceResponse.Data = products.Select(p => _mapper.Map<ProductDto>(p)).ToList()!;
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
+    }
+
     private async Task<Cart> CreateCart(User user, Product product)
     {    
         var cart = await _context.Carts.AddAsync(new Cart{User = user});
