@@ -51,5 +51,13 @@ namespace _3ASP.Controllers
             if (response.Success is false) return BadRequest(response);
             return Ok(response);
         }
+        
+        [HttpPost("pay/{userId}")]
+        public async Task<ActionResult<ServiceResponse<CartDto>>> PayCart(int userId)
+        {
+            var response = await _cartService.PayCart(userId);
+            if (response is null) return BadRequest(response);
+            return Ok(response);
+        }
     }
 }

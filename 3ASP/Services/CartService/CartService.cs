@@ -98,11 +98,29 @@ public class CartService : ICartService
             if (cart is null) throw new Exception("No cart for this user");
             var cartProducts = _context.CartProducts.Where(c => c.Cart.Id == cart.Id)
                 .Include(cartProduct => cartProduct.Product).ToList();
-            foreach (var cartProduct in cartProducts)
-            {
-                products.Add(cartProduct.Product);
-            }
+            products.AddRange(cartProducts.Select(cartProduct => cartProduct.Product));
             serviceResponse.Data = products.Select(p => _mapper.Map<ProductDto>(p)).ToList()!;
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
+    }
+    
+    public async Task<ServiceResponse<CartDto>> PayCart(int userId)
+    {
+        var serviceResponse = new ServiceResponse<CartDto>();
+        try
+        {
+            var cart = await _context.Carts.FirstOrDefaultAsync(u => u.Id == userId);
+            if (cart is null) throw new Exception("Didn't found cart for this user");
+            cart.Paid = true;
+            _context.Carts.Update(cart);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = _mapper.Map<CartDto>(cart);
         }
         catch (Exception e)
         {

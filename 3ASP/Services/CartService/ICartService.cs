@@ -11,4 +11,5 @@ public interface ICartService
     Task<ServiceResponse<CartDto>> RemoveProduct(int userId, int productId);
 
     Task<ServiceResponse<List<ProductDto>>> GetCart(int userId);
+    Task<ServiceResponse<CartDto>> PayCart(int userId);
 }
