@@ -36,7 +36,6 @@ public class AuthChoice
                 Console.WriteLine("Password ?");
                 password = Console.ReadLine()!;
                 response = await AuthHandler.Jwt(new AuthUserDto() { Password = password, Pseudo = pseudo });
-                Console.WriteLine(response);
                 break;
             case "return":
                 break;
