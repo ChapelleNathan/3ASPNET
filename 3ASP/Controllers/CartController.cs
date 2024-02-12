@@ -34,5 +34,13 @@ namespace _3ASP.Controllers
             if (response.Success is false) return BadRequest(response);
             return Ok(response);
         }
+
+        [HttpDelete("{userId}/{productId}")]
+        public async Task<ActionResult<ServiceResponse<CartDto>>> RemoveItem(int userId, int productId)
+        {
+            var response = await _cartService.RemoveProduct(userId, productId);
+            if (response.Success is false) return BadRequest(response);
+            return Ok(response);
+        }
     }
 }

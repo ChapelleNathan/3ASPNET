@@ -33,9 +33,9 @@ public class CartService : ICartService
         return serviceResponse;
     }
 
-    public async Task<ServiceResponse<CartProductDto>> AddItems(int userId, int productId)
+    public async Task<ServiceResponse<CartDto>> AddItems(int userId, int productId)
     {
-        var serviceResponse = new ServiceResponse<CartProductDto>();
+        var serviceResponse = new ServiceResponse<CartDto>();
 
         try
         {
@@ -43,19 +43,16 @@ public class CartService : ICartService
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
             if (user is null) throw new Exception("User not found");
             if (product is null) throw new Exception("Product not found");
-            CartProductDto? cartProduct = null;
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == user.Id);
             if (cart is null)
             {
-                cartProduct = await CreateCart(user, product);
+                cart = await CreateCart(user, product);
             }
             else
             {
-                cartProduct = await AddProductToCart(cart, product);
+                cart = await AddProductToCart(cart, product);
             }
-
-            if (cartProduct is null) throw new Exception("Error while trying to add an item to your cart");
-            serviceResponse.Data = cartProduct;
+            serviceResponse.Data = _mapper.Map<CartDto>(cart);
         }
         catch (Exception e)
         {
@@ -67,23 +64,42 @@ public class CartService : ICartService
     }
 
 
-    public Task<ServiceResponse<CartDto>> RemoveProduct(int productId)
+    public async Task<ServiceResponse<CartDto>> RemoveProduct(int userId, int productId)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<CartDto>();
+        try
+        {
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId);
+            if (cart is null) throw new Exception("No cart linked to the user");
+
+            var cartProduct = await _context.CartProducts.FirstOrDefaultAsync(c => c.Product.Id == productId);
+            if (cartProduct is null) throw new Exception("Product not found in your cart");
+
+            serviceResponse.Data = _mapper.Map<CartDto>(cart);
+            _context.CartProducts.Remove(cartProduct);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
     }
 
-    private async Task<CartProductDto> CreateCart(User user, Product product)
+    private async Task<Cart> CreateCart(User user, Product product)
     {    
         var cart = await _context.Carts.AddAsync(new Cart{User = user});
-        var productCart = await _context.CartProducts.AddAsync(new CartProduct { Cart = cart.Entity, Product = product });
+        await _context.CartProducts.AddAsync(new CartProduct { Cart = cart.Entity, Product = product });
         await _context.SaveChangesAsync();
-        return _mapper.Map<CartProductDto>(productCart.Entity)!;
+        return cart.Entity;
     }
 
-    private async Task<CartProductDto> AddProductToCart(Cart cart, Product product)
+    private async Task<Cart> AddProductToCart(Cart cart, Product product)
     {
-        var cartProduct = await _context.CartProducts.AddAsync(new CartProduct { Cart = cart, Product = product });
+        await _context.CartProducts.AddAsync(new CartProduct { Cart = cart, Product = product });
         await _context.SaveChangesAsync();
-        return _mapper.Map<CartProductDto>(cartProduct.Entity)!;
+        return cart;
     }
 }
