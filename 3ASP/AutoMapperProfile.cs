@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using _3ASP.DTO.ProductDto;
 using _3ASP.DTO.UserDto;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,6 +13,8 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<User, UserDto>();
         CreateMap<PostUserDto, User>();
+        CreateMap<Product, ProductDto>();
+        CreateMap<PostProductDto, Product>();
         //CreateMap<User, ConnectedUserDto>().ConvertUsing<UserToConnectedUser>();
     }
 }
