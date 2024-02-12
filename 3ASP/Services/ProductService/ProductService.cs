@@ -59,9 +59,29 @@ public class ProductService : IProductService
         return serviceResponse;
     }
 
-    public Task<ServiceResponse<ProductDto>> Update(UpdateProductDto request, int id)
+    public async Task<ServiceResponse<ProductDto>> Update(UpdateProductDto request, int id)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<ProductDto>();
+        try
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product is null) throw new Exception("Product not found");
+
+            if (request.Available != product.Available) product.Available = request.Available;
+            if (request.Name != product.Name) product.Name = request.Name;
+            if (request.Image != product.Image) product.Image = request.Image;
+            if (Math.Abs(request.Price - product.Price) > 0.2) product.Price = request.Price;
+
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = _mapper.Map<ProductDto>(product);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
     }
 
     public Task<ServiceResponse<ProductDto>> Delete(int id)

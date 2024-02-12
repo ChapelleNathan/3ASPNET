@@ -41,5 +41,13 @@ public class ProductController : ControllerBase
         if (response.Success is false) return BadRequest(response);
         return Ok(response);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ServiceResponse<ProductDto>>> Update([FromBody] UpdateProductDto request, int id)
+    {
+        var response = await _productService.Update(request, id);
+        if (response.Success is false) return BadRequest(response);
+        return Ok(response);
+    }
     
 }
