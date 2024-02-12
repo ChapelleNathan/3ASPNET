@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using App.ConsoleMessages;
 using App.DTO.UserDto;
@@ -12,6 +13,8 @@ public static class UserHandler
     public static async Task<List<UserDto>?> GetUsers()
     {
         using HttpClient client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",
+            "token");
         HttpResponseMessage response = await client.GetAsync(Url);
         
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());

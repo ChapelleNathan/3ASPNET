@@ -36,4 +36,4 @@ while (app == true)
     }
 }
 
-
+Console.WriteLine(Globals.Token);

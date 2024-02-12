@@ -62,7 +62,6 @@ public static class AuthHandler
             GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
-
         return responseBody.data;
     }
 }
