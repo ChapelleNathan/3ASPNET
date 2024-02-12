@@ -29,7 +29,7 @@ namespace _3ASP.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<UserDto>>> Login(AuthUserDto user)
+        public async Task<ActionResult<ServiceResponse<ConnectedUserDto>>> Login(AuthUserDto user)
         {
             var response = await _authService.LogIn(user);
             if (response.Data is null) return BadRequest(response);

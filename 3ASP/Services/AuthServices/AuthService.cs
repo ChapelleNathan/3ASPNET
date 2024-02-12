@@ -42,9 +42,9 @@ public class AuthService : IAuthService
         return serviceResponse;
     }
 
-    public async Task<ServiceResponse<UserDto>> LogIn(AuthUserDto request)
+    public async Task<ServiceResponse<ConnectedUserDto>> LogIn(AuthUserDto request)
     {
-        var serviceResponse = new ServiceResponse<UserDto>();
+        var serviceResponse = new ServiceResponse<ConnectedUserDto>();
         try
         {
             User? user = await _context.Users.FirstOrDefaultAsync(u => u.Pseudo == request.Pseudo);
@@ -57,7 +57,12 @@ public class AuthService : IAuthService
                     throw new Exception("Wrong password or username");
                 }
 
-                serviceResponse.Data = _mapper.Map<UserDto>(user);
+                serviceResponse.Data = new ConnectedUserDto()
+                {
+                    Pseudo = user.Pseudo,
+                    Email = user.Email,
+                    Token = CreateToken(user),
+                };
             }
             catch (Exception e)
             {
@@ -101,7 +106,7 @@ public class AuthService : IAuthService
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Pseudo),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
         };
         
         var key = new SymmetricSecurityKey(

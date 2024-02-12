@@ -30,7 +30,7 @@ namespace _3ASP.Controllers
             _userService = userService;
         }
 
-        [HttpGet, Authorize(Roles = "Admin,User")] //Pourquoi je ne peux pas utiliser mon Enum Roles (Roles = Roles.Admin.ToString()) ?
+        [HttpGet] //Pourquoi je ne peux pas utiliser mon Enum Roles (Roles = Roles.Admin.ToString()) ?
         public async Task<ActionResult<ServiceResponse<List<UserDto>>>> Get()
         {
             return Ok(await _userService.GetAllUsers());
