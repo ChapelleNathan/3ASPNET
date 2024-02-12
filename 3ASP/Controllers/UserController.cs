@@ -20,13 +20,11 @@ namespace _3ASP.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-        private readonly DataContext _context;
         private readonly IUserService _userService;
 
-        public UserController(ILogger<UserController> loger, DataContext context, IUserService userService)
+        public UserController(ILogger<UserController> loger,IUserService userService)
         {
             _logger = loger;
-            _context = context;
             _userService = userService;
         }
 
