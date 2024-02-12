@@ -1,6 +1,6 @@
-namespace _3ASP.Models;
+namespace _3ASP.DTO.ProductCartDto;
 
-public class CartProducts
+public class CartProductDto
 {
     public int Id { get; private set; }
     public required Cart Cart { get;  set; }

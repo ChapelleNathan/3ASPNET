@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using _3ASP.DTO.CartDto;
+using _3ASP.DTO.ProductCartDto;
 using _3ASP.DTO.ProductDto;
 using _3ASP.DTO.UserDto;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +18,7 @@ public class AutoMapperProfile : Profile
         CreateMap<Product, ProductDto>();
         CreateMap<PostProductDto, Product>();
         CreateMap<Cart, CartDto>();
+        CreateMap<CartProduct, CartProductDto>();
         //CreateMap<User, ConnectedUserDto>().ConvertUsing<UserToConnectedUser>();
     }
 }
