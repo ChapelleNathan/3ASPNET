@@ -38,7 +38,7 @@ public class ProductService : IProductService
     public async Task<ServiceResponse<List<ProductDto>>> GetAll()
     {
         var serviceResponse = new ServiceResponse<List<ProductDto>>();
-        var products = await _context.Products.ToListAsync();
+        var products = await _context.Products.Take(10).ToListAsync();
         serviceResponse.Data = products.Select(p => _mapper.Map<ProductDto>(p)).ToList()!;
         return serviceResponse;
     }

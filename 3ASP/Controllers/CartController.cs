@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using _3ASP.DTO.CartDto;
 using _3ASP.DTO.ProductDto;
 using _3ASP.Services.CartService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace _3ASP.Controllers
         {
             _cartService = cartService;
         }
-        [HttpGet("{id}")]
+        [HttpGet("{userId}"), Authorize]
         public async Task<ActionResult<ServiceResponse<List<ProductDto>>>> GetOne(int userId)
         {
             var response = await _cartService.GetCart(userId);
@@ -28,7 +29,7 @@ namespace _3ASP.Controllers
             return Ok(response);;
         }
 
-        [HttpPost("{userId}/{productId}")]
+        [HttpPost("{userId}/{productId}"), Authorize]
         public async Task<ActionResult<ServiceResponse<CartDto>>> AddItems(int userId, int productId)
         {
             var response = await _cartService.AddItems(userId, productId);
@@ -36,7 +37,7 @@ namespace _3ASP.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{userId}/{productId}")]
+        [HttpDelete("{userId}/{productId}"), Authorize]
         public async Task<ActionResult<ServiceResponse<CartDto>>> RemoveItem(int userId, int productId)
         {
             var response = await _cartService.RemoveProduct(userId, productId);
@@ -44,7 +45,7 @@ namespace _3ASP.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{userId}/user")]
+        [HttpGet("{userId}/user"), Authorize]
         public async Task<ActionResult<ServiceResponse<List<ProductDto>>>> GetCart(int userId)
         {
             var response = await _cartService.GetCart(userId);
@@ -52,11 +53,11 @@ namespace _3ASP.Controllers
             return Ok(response);
         }
         
-        [HttpPost("pay/{userId}")]
+        [HttpPost("pay/{userId}"), Authorize]
         public async Task<ActionResult<ServiceResponse<CartDto>>> PayCart(int userId)
         {
             var response = await _cartService.PayCart(userId);
-            if (response is null) return BadRequest(response);
+            if (response.Success is false) return BadRequest(response);
             return Ok(response);
         }
     }

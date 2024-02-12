@@ -43,7 +43,7 @@ public class CartService : ICartService
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
             if (user is null) throw new Exception("User not found");
             if (product is null) throw new Exception("Product not found");
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == user.Id);
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == user.Id && !c.Paid);
             if (cart is null)
             {
                 cart = await CreateCart(user, product);
@@ -69,7 +69,7 @@ public class CartService : ICartService
         var serviceResponse = new ServiceResponse<CartDto>();
         try
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId);
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId && !c.Paid);
             if (cart is null) throw new Exception("No cart linked to the user");
 
             var cartProduct = await _context.CartProducts.FirstOrDefaultAsync(c => c.Product.Id == productId);
@@ -94,7 +94,7 @@ public class CartService : ICartService
         var products = new List<Product>();
         try
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId);
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId && !c.Paid);
             if (cart is null) throw new Exception("No cart for this user");
             var cartProducts = _context.CartProducts.Where(c => c.Cart.Id == cart.Id)
                 .Include(cartProduct => cartProduct.Product).ToList();
@@ -115,8 +115,9 @@ public class CartService : ICartService
         var serviceResponse = new ServiceResponse<CartDto>();
         try
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(u => u.Id == userId);
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == userId && !c.Paid);
             if (cart is null) throw new Exception("Didn't found cart for this user");
+            if (cart.Paid) throw new Exception("Cart already paid");
             cart.Paid = true;
             _context.Carts.Update(cart);
             await _context.SaveChangesAsync();

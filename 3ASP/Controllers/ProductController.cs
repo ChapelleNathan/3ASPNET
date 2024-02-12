@@ -2,6 +2,7 @@ using _3ASP.Data;
 using _3ASP.DTO.CartDto;
 using _3ASP.DTO.ProductDto;
 using _3ASP.Services.ProductService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ public class ProductController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "Seller,Admin")]
     public async Task<ActionResult<ServiceResponse<ProductDto>>> Create(PostProductDto request)
     {
         var response = await _productService.CreateProduct(request);
@@ -41,7 +42,7 @@ public class ProductController : ControllerBase
         return Ok(response);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}"), Authorize(Roles = "Seller,Admin")]
     public async Task<ActionResult<ServiceResponse<ProductDto>>> Update([FromBody] UpdateProductDto request, int id)
     {
         var response = await _productService.Update(request, id);
@@ -49,7 +50,7 @@ public class ProductController : ControllerBase
         return Ok(response);
     }
     
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize(Roles = "Seller, Admin")]
     public async Task<ActionResult<ServiceResponse<ProductDto>>> Delete(int id)
     {
         var response = await _productService.Delete(id);
