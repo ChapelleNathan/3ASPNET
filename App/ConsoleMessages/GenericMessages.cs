@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace App.ConsoleMessages;
 
 public class GenericMessages
@@ -12,6 +14,7 @@ public class GenericMessages
     {
         Console.WriteLine("Que voulez vous faire ?");
         Console.WriteLine("User: Accéder à toutes les commandes lié aux utilisateurs");
+        Console.WriteLine("Auth: Se connecter ou créer un compte");
         Console.WriteLine("q: pour quitter la ligne de commande");
     }
 
@@ -39,5 +42,16 @@ public class GenericMessages
         }
 
         return response;
+    }
+    
+    public static void DisplayError(HttpStatusCode errorCode, dynamic message)
+    {
+        Console.WriteLine($"Une erreur est apparu avec le code {errorCode}");
+        Console.WriteLine($"Erreur: {message}");
+    }
+
+    public static string NotAuthorized()
+    {
+        return "Erreur: vous n'êtes pas authorisé";
     }
 }

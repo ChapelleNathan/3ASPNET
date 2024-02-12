@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using App.ConsoleMessages;
 using App.DTO.UserDto;
@@ -8,16 +10,23 @@ namespace App.Handlers;
 public static class UserHandler
 {
     private const string Url = "http://localhost:5243/api/User";
-
+    
     public static async Task<List<UserDto>?> GetUsers()
     {
         using HttpClient client = new HttpClient();
+
         HttpResponseMessage response = await client.GetAsync(Url);
-        
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            GenericMessages.DisplayError(response.StatusCode, GenericMessages.NotAuthorized());
+            return null;
+        }
+
+        Console.WriteLine(response.StatusCode);
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
@@ -29,7 +38,6 @@ public static class UserHandler
                 Id = user.id,
                 Email = user.email,
                 Pseudo = user.pseudo,
-                Password = user.password,
                 Role = user.role,
             });
         }
@@ -42,44 +50,19 @@ public static class UserHandler
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.GetAsync(Url + "/" + userId);
 
-        dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync())!;
-        if (responseBody.success == "false")
-        {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
-            return null;
-        }
-
-
-        return new UserDto()
-        {
-            Id = responseBody.data.id,
-            Email = responseBody.data.email,
-            Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
-            Role = responseBody.data.role,
-        };
-    }
-
-    public static async Task<UserDto?> AddOneUser()
-    {
-        PostUserDto userDto = UserMessages.AddUserConsole();
-        
-        using HttpClient client = new HttpClient();
-        HttpResponseMessage response = await client.PostAsJsonAsync(Url, userDto);
-        
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
-            
+
+
         return new UserDto()
         {
             Id = responseBody.data.id,
             Email = responseBody.data.email,
             Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
             Role = responseBody.data.role,
         };
     }
@@ -88,23 +71,22 @@ public static class UserHandler
     {
         UserDto? user = await GetOneUser(id);
         if (user is null) return null;
-        
+
         UpdateUserDto updatedUser = UserMessages.UpdateUserConsole(user);
-        
+
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.PutAsJsonAsync(Url, updatedUser);
-        
+
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success is null)
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
         return new UserDto()
         {
             Id = responseBody.data.id,
-            Password = responseBody.data.password,
             Pseudo = responseBody.data.pseudo,
             Email = responseBody.data.email,
             Role = responseBody.data.role,
@@ -115,11 +97,11 @@ public static class UserHandler
     {
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.DeleteAsync(Url + "/" + id);
-        
+
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
@@ -127,7 +109,6 @@ public static class UserHandler
         {
             Id = responseBody.data.id,
             Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
             Role = responseBody.data.role,
             Email = responseBody.data.email,
         };

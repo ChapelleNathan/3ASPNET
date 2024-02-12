@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using _3ASP.Data;
 using _3ASP.DTO.UserDto;
+using _3ASP.Enums;
 using _3ASP.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 using NuGet.Protocol;
 using Org.BouncyCastle.Crypto.Generators;
 
@@ -27,7 +30,7 @@ namespace _3ASP.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet] //Pourquoi je ne peux pas utiliser mon Enum Roles (Roles = Roles.Admin.ToString()) ?
         public async Task<ActionResult<ServiceResponse<List<UserDto>>>> Get()
         {
             return Ok(await _userService.GetAllUsers());
@@ -41,15 +44,8 @@ namespace _3ASP.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<UserDto>>>> AddUser(PostUserDto user)
-        {
-            var response = await _userService.AddUser(user);
-            if (response.Data is null) return NotFound(response);
-            return Ok(response);
-        }
-
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult<ServiceResponse<UserDto>>> UpdateUser(UpdateUserDto updatedUser)
         {
             var response = await _userService.UpdateUser(updatedUser);
@@ -58,6 +54,7 @@ namespace _3ASP.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<ServiceResponse<UserDto>>> DeleteUser(int id)
         {
             var response = await _userService.DeleteUser(id);

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using _3ASP.Data;
 using _3ASP.DTO.UserDto;
 using _3ASP.Models;
@@ -9,11 +10,13 @@ public class UserService : IUserService
 {
     private readonly IMapper _mapper;
     private readonly DataContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(IMapper mapper, DataContext context)
+    public UserService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
     {
         _mapper = mapper;
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<ServiceResponse<List<UserDto>>> GetAllUsers()
@@ -42,20 +45,15 @@ public class UserService : IUserService
         return serviceResponse;
     }
 
-    public async Task<ServiceResponse<UserDto>> AddUser(PostUserDto userDto)
-    {
-        var serviceResponse = new ServiceResponse<UserDto>();
-        var newUser = _mapper.Map<User>(userDto)!;
-        newUser.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-        await _context.Users.AddAsync(newUser);
-        await _context.SaveChangesAsync();
-        serviceResponse.Data = _mapper.Map<UserDto>(newUser);
-        return serviceResponse;
-    }
-
     public async Task<ServiceResponse<UserDto>> UpdateUser(UpdateUserDto updatedUser)
     {
         var serviceResponse = new ServiceResponse<UserDto>();
+        if (!VerifyUser(updatedUser.Id.ToString()))
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = "Unauthorized";
+            return serviceResponse;
+        }
         try
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == updatedUser.Id);
@@ -82,6 +80,12 @@ public class UserService : IUserService
     public async Task<ServiceResponse<UserDto>> DeleteUser(int id)
     {
         var serviceResponse = new ServiceResponse<UserDto>();
+        if (!VerifyUser(id.ToString()))
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = "Unauthorized";
+            return serviceResponse;
+        }
         try
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -101,5 +105,16 @@ public class UserService : IUserService
         }
 
         return serviceResponse;
+    }
+
+    private bool VerifyUser(string id)
+    {
+        if (_httpContextAccessor.HttpContext is null)
+        {
+            return false;
+        }
+        var result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        return result == id;
     }
 }
