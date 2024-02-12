@@ -10,13 +10,10 @@ namespace App.Handlers;
 public static class UserHandler
 {
     private const string Url = "http://localhost:5243/api/User";
-
+    
     public static async Task<List<UserDto>?> GetUsers()
     {
         using HttpClient client = new HttpClient();
-        if (Globals.Token is not null)
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",
-                Globals.Token);
 
         HttpResponseMessage response = await client.GetAsync(Url);
         if (response.StatusCode == HttpStatusCode.Unauthorized)
