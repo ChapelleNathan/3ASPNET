@@ -45,6 +45,7 @@ namespace _3ASP.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult<ServiceResponse<UserDto>>> UpdateUser(UpdateUserDto updatedUser)
         {
             var response = await _userService.UpdateUser(updatedUser);
@@ -53,6 +54,7 @@ namespace _3ASP.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<ServiceResponse<UserDto>>> DeleteUser(int id)
         {
             var response = await _userService.DeleteUser(id);
