@@ -3,6 +3,7 @@ using System.Text;
 using _3ASP;
 using _3ASP.Data;
 using _3ASP.Services.AuthServices;
+using _3ASP.Services.ProductService;
 using _3ASP.Services.UserServices;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -42,7 +43,8 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<ProductController>();
+//builder.Services.AddScoped<ProductController>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
