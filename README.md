@@ -6,6 +6,11 @@ Cloner le projet
 git clone git@github.com:ChapelleNathan/3ASPNET.git
 ```
 
+Lancer docker
+```
+dokcer compose up -d
+```
+
 Lancer lancer le projet
 ```
 dotnet watch run
