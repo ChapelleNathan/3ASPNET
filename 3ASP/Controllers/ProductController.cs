@@ -24,5 +24,16 @@ public class ProductController : ControllerBase
     {
         return Ok(await _productService.GetAll());
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ServiceResponse<ProductDto>>> GetOne(int id)
+    {
+        var response = await _productService.GetOne(id);
+        if (response.Success is false)
+        {
+            return BadRequest(response);
+        }
+        return Ok(response);
+    }
     
 }

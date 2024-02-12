@@ -1,5 +1,6 @@
 using _3ASP.Data;
 using _3ASP.DTO.ProductDto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace _3ASP.Services.ProductService;
 
@@ -26,9 +27,22 @@ public class ProductService : IProductService
         return serviceResponse;
     }
 
-    public Task<ServiceResponse<ProductDto>> GetOne(int id)
+    public async Task<ServiceResponse<ProductDto>> GetOne(int id)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<ProductDto>();
+        try
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product is null) throw new Exception("Product not found");
+            serviceResponse.Data = _mapper.Map<ProductDto>(product);
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+        
+        return serviceResponse;
     }
 
     public Task<ServiceResponse<ProductDto>> Update(UpdateProductDto request, int id)
