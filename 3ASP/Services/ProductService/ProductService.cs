@@ -14,6 +14,7 @@ public class ProductService : IProductService
         _mapper = mapper;
         _context = context;
     }
+
     public async Task<ServiceResponse<ProductDto>> CreateProduct(PostProductDto request)
     {
         var serviceResponse = new ServiceResponse<ProductDto>();
@@ -37,7 +38,7 @@ public class ProductService : IProductService
     {
         var serviceResponse = new ServiceResponse<List<ProductDto>>();
         var products = await _context.Products.ToListAsync();
-        serviceResponse.Data = products.Select(p => _mapper.Map<ProductDto>(p)).ToList()!;       
+        serviceResponse.Data = products.Select(p => _mapper.Map<ProductDto>(p)).ToList()!;
         return serviceResponse;
     }
 
@@ -55,7 +56,7 @@ public class ProductService : IProductService
             serviceResponse.Success = false;
             serviceResponse.Message = e.Message;
         }
-        
+
         return serviceResponse;
     }
 
@@ -84,8 +85,23 @@ public class ProductService : IProductService
         return serviceResponse;
     }
 
-    public Task<ServiceResponse<ProductDto>> Delete(int id)
+    public async Task<ServiceResponse<ProductDto>> Delete(int id)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<ProductDto>();
+        try
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product is null) throw new Exception("Product not found");
+            serviceResponse.Data = _mapper.Map<ProductDto>(product);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        return serviceResponse;
     }
 }

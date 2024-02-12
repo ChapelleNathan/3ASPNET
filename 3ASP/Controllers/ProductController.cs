@@ -50,4 +50,11 @@ public class ProductController : ControllerBase
         return Ok(response);
     }
     
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ServiceResponse<ProductDto>>> Delete(int id)
+    {
+        var response = await _productService.Delete(id);
+        if (response.Success is false) return BadRequest(response);
+        return Ok(response);
+    }
 }
