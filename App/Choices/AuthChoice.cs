@@ -1,4 +1,5 @@
 using App.ConsoleMessages;
+using App.DTO.UserDto;
 using App.Handlers;
 using Newtonsoft.Json.Linq;
 
@@ -11,6 +12,8 @@ public class AuthChoice
         AuthMessages.AuthMessage();
         var choice = Console.ReadLine();
         dynamic? response = null;
+        string? pseudo;
+        string? password;
         switch (choice)
         {
             case "Register":
@@ -19,7 +22,22 @@ public class AuthChoice
                     response = JObject.FromObject(response);
                 break;
             case "Login":
-                throw new NotImplementedException();
+                Console.WriteLine("Pseudo ?");
+                pseudo = Console.ReadLine()!;
+                Console.WriteLine("Password ?");
+                password = Console.ReadLine()!;
+                response = await AuthHandler.Login(new AuthUserDto() { Pseudo = pseudo, Password = password });
+                if (response is not null)
+                    response = JObject.FromObject(response);
+                break;
+            case "jwt":
+                Console.WriteLine("Pseudo ?");
+                pseudo = Console.ReadLine()!;
+                Console.WriteLine("Password ?");
+                password = Console.ReadLine()!;
+                response = await AuthHandler.Jwt(new AuthUserDto() { Password = password, Pseudo = pseudo });
+                Console.WriteLine(response);
+                break;
             case "return":
                 break;
             default:
@@ -27,7 +45,7 @@ public class AuthChoice
                 await AuthCase();
                 break;
         }
+
         return response;
     }
-
 }

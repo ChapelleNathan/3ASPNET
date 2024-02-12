@@ -17,7 +17,7 @@ public static class UserHandler
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
@@ -41,10 +41,10 @@ public static class UserHandler
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.GetAsync(Url + "/" + userId);
 
-        dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync())!;
+        dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
@@ -71,7 +71,7 @@ public static class UserHandler
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success is null)
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 
@@ -92,7 +92,7 @@ public static class UserHandler
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
 

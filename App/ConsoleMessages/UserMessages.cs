@@ -14,12 +14,6 @@ public abstract class UserMessages : GenericMessages
         Console.WriteLine("DeleteOne: Supprime un utilisateur selon un ID");
         Console.WriteLine("return: Retourner en arrière");
     }
-
-    public static void DisplayError(HttpStatusCode errorCode, dynamic message)
-    {
-        Console.WriteLine($"Une erreur est apparu avec le code {errorCode}");
-        Console.WriteLine($"Erreur: {message}");
-    }
     
     public static UpdateUserDto UpdateUserConsole(UserDto updatedUser)
     {

@@ -48,5 +48,4 @@ public class AuthMessages : GenericMessages
 
         return newUser;
     }
-
 }

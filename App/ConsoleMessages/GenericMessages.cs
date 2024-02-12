@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace App.ConsoleMessages;
 
 public class GenericMessages
@@ -40,5 +42,11 @@ public class GenericMessages
         }
 
         return response;
+    }
+    
+    public static void DisplayError(HttpStatusCode errorCode, dynamic message)
+    {
+        Console.WriteLine($"Une erreur est apparu avec le code {errorCode}");
+        Console.WriteLine($"Erreur: {message}");
     }
 }
