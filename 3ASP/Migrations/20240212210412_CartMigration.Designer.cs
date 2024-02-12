@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _3ASP.Data;
 
@@ -10,9 +11,11 @@ using _3ASP.Data;
 namespace _3ASP.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240212210412_CartMigration")]
+    partial class CartMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,27 +41,6 @@ namespace _3ASP.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("_3ASP.Models.CartProducts", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartProducts");
-                });
-
             modelBuilder.Entity("_3ASP.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -70,6 +52,9 @@ namespace _3ASP.Migrations
 
                     b.Property<bool>("Available")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -83,6 +68,8 @@ namespace _3ASP.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.ToTable("Products");
                 });
@@ -131,23 +118,16 @@ namespace _3ASP.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("_3ASP.Models.CartProducts", b =>
+            modelBuilder.Entity("_3ASP.Models.Product", b =>
                 {
-                    b.HasOne("_3ASP.Models.Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("_3ASP.Models.Cart", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CartId");
+                });
 
-                    b.HasOne("_3ASP.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
+            modelBuilder.Entity("_3ASP.Models.Cart", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using System.Text;
 using _3ASP;
 using _3ASP.Data;
 using _3ASP.Services.AuthServices;
+using _3ASP.Services.CartService;
 using _3ASP.Services.ProductService;
 using _3ASP.Services.UserServices;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +46,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 //builder.Services.AddScoped<ProductController>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 var app = builder.Build();
 

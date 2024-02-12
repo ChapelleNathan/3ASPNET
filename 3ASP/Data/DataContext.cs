@@ -10,6 +10,8 @@ public class DataContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<Cart> Carts => Set<Cart>();
+    public DbSet<CartProduct> CartProducts => Set<CartProduct>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
