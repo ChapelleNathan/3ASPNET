@@ -29,10 +29,16 @@ public class ProductController : ControllerBase
     public async Task<ActionResult<ServiceResponse<ProductDto>>> GetOne(int id)
     {
         var response = await _productService.GetOne(id);
-        if (response.Success is false)
-        {
-            return BadRequest(response);
-        }
+        if (response.Success is false) return BadRequest(response);
+        
+        return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ServiceResponse<ProductDto>>> Create(PostProductDto request)
+    {
+        var response = await _productService.CreateProduct(request);
+        if (response.Success is false) return BadRequest(response);
         return Ok(response);
     }
     

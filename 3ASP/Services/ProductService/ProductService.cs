@@ -14,9 +14,23 @@ public class ProductService : IProductService
         _mapper = mapper;
         _context = context;
     }
-    public Task<ServiceResponse<ProductDto>> CreateProduct(PostProductDto request)
+    public async Task<ServiceResponse<ProductDto>> CreateProduct(PostProductDto request)
     {
-        throw new NotImplementedException();
+        var serviceResponse = new ServiceResponse<ProductDto>();
+        var newProduct = _mapper.Map<Product>(request)!;
+        try
+        {
+            await _context.Products.AddAsync(newProduct);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            serviceResponse.Success = false;
+            serviceResponse.Message = e.Message;
+        }
+
+        serviceResponse.Data = _mapper.Map<ProductDto>(newProduct);
+        return serviceResponse;
     }
 
     public async Task<ServiceResponse<List<ProductDto>>> GetAll()
