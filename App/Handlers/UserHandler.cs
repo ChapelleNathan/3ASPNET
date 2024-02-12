@@ -29,7 +29,6 @@ public static class UserHandler
                 Id = user.id,
                 Email = user.email,
                 Pseudo = user.pseudo,
-                Password = user.password,
                 Role = user.role,
             });
         }
@@ -55,31 +54,6 @@ public static class UserHandler
             Id = responseBody.data.id,
             Email = responseBody.data.email,
             Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
-            Role = responseBody.data.role,
-        };
-    }
-
-    public static async Task<UserDto?> AddOneUser()
-    {
-        PostUserDto userDto = UserMessages.AddUserConsole();
-        
-        using HttpClient client = new HttpClient();
-        HttpResponseMessage response = await client.PostAsJsonAsync(Url, userDto);
-        
-        dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
-        if (responseBody.success == "false")
-        {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
-            return null;
-        }
-            
-        return new UserDto()
-        {
-            Id = responseBody.data.id,
-            Email = responseBody.data.email,
-            Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
             Role = responseBody.data.role,
         };
     }
@@ -104,7 +78,6 @@ public static class UserHandler
         return new UserDto()
         {
             Id = responseBody.data.id,
-            Password = responseBody.data.password,
             Pseudo = responseBody.data.pseudo,
             Email = responseBody.data.email,
             Role = responseBody.data.role,
@@ -127,7 +100,6 @@ public static class UserHandler
         {
             Id = responseBody.data.id,
             Pseudo = responseBody.data.pseudo,
-            Password = responseBody.data.password,
             Role = responseBody.data.role,
             Email = responseBody.data.email,
         };

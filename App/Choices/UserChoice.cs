@@ -23,11 +23,6 @@ public static class UserChoice
                 if (response is not null)
                     response = JObject.FromObject(response);
                 break;
-            case "AddOne":
-                response = await UserHandler.AddOneUser();
-                if (response is not null)
-                    response = JObject.FromObject(response);
-                break;
             case "UpdateOne":
                 Console.WriteLine("Enseignez l'ID de l'utilisateur que vous voulez modifier");
                 response = await UserHandler.UpdateOneUser(Console.ReadLine()!);

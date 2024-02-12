@@ -12,6 +12,7 @@ public class GenericMessages
     {
         Console.WriteLine("Que voulez vous faire ?");
         Console.WriteLine("User: Accéder à toutes les commandes lié aux utilisateurs");
+        Console.WriteLine("Auth: Se connecter ou créer un compte");
         Console.WriteLine("q: pour quitter la ligne de commande");
     }
 

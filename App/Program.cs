@@ -9,12 +9,19 @@ using Newtonsoft.Json.Linq;
 var app = true;
 while (app == true)
 {
+    dynamic? response = null;
     GenericMessages.Startup();
     var choice = Console.ReadLine();
     switch (choice)
     {
+        case "Auth":
+            response = await AuthChoice.AuthCase();
+            if (response != null)
+                Console.WriteLine(response);
+            GenericMessages.EndOfOperation();
+            break;
         case "User":
-            var response = await UserChoice.UserCase();
+            response = await UserChoice.UserCase();
             if (response != null)
                 Console.WriteLine(response);
             GenericMessages.EndOfOperation();
