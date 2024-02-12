@@ -49,4 +49,9 @@ public class GenericMessages
         Console.WriteLine($"Une erreur est apparu avec le code {errorCode}");
         Console.WriteLine($"Erreur: {message}");
     }
+
+    public static string NotAuthorized()
+    {
+        return "Erreur: vous n'êtes pas authorisé";
+    }
 }

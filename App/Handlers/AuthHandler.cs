@@ -19,7 +19,7 @@ public static class AuthHandler
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
-            UserMessages.DisplayError(response.StatusCode, responseBody.message);
+            GenericMessages.DisplayError(response.StatusCode, responseBody.message);
             return null;
         }
             
@@ -32,7 +32,7 @@ public static class AuthHandler
         };
     }
 
-    public static async Task<UserDto?> Login(AuthUserDto request)
+    public static async Task<ConnectedUserDto?> Login(AuthUserDto request)
     {
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.PostAsJsonAsync(Url + "/login", request);
@@ -43,12 +43,13 @@ public static class AuthHandler
             return null;
         }
 
-        return new UserDto()
+        Globals.Token = responseBody.data.token;
+
+        return new ConnectedUserDto()
         {
-            Id = responseBody.data.id,
             Pseudo = responseBody.data.pseudo,
             Email = responseBody.data.email,
-            Role = responseBody.data.role,
+            Token = responseBody.data.token,
         };
     }
 

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using App.ConsoleMessages;
@@ -13,10 +14,18 @@ public static class UserHandler
     public static async Task<List<UserDto>?> GetUsers()
     {
         using HttpClient client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",
-            "token");
+        if (Globals.Token is not null)
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer",
+                Globals.Token);
+
         HttpResponseMessage response = await client.GetAsync(Url);
-        
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            GenericMessages.DisplayError(response.StatusCode, GenericMessages.NotAuthorized());
+            return null;
+        }
+
+        Console.WriteLine(response.StatusCode);
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {
@@ -65,12 +74,12 @@ public static class UserHandler
     {
         UserDto? user = await GetOneUser(id);
         if (user is null) return null;
-        
+
         UpdateUserDto updatedUser = UserMessages.UpdateUserConsole(user);
-        
+
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.PutAsJsonAsync(Url, updatedUser);
-        
+
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success is null)
         {
@@ -91,7 +100,7 @@ public static class UserHandler
     {
         using HttpClient client = new HttpClient();
         HttpResponseMessage response = await client.DeleteAsync(Url + "/" + id);
-        
+
         dynamic responseBody = JObject.Parse(await response.Content.ReadAsStringAsync());
         if (responseBody.success == "false")
         {

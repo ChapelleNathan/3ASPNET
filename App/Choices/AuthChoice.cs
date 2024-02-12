@@ -44,7 +44,6 @@ public class AuthChoice
                 await AuthCase();
                 break;
         }
-
         return response;
     }
 }

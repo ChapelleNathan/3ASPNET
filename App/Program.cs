@@ -35,5 +35,3 @@ while (app == true)
             break;
     }
 }
-
-Console.WriteLine(Globals.Token);
